@@ -1,111 +1,64 @@
-# 🎧 Model Card: Music Recommender Simulation
+# Model Card: Music Recommender Simulation
 
-## 1. Model Name  
+## 1. Model Name
 
-Give your model a short, descriptive name.  
-Example: **VibeFinder 1.0**  
+VibeMatch MVP 1.0
 
----
+## 2. Intended Use
 
-## 2. Intended Use  
+This model suggests top songs from a small local catalog based on user taste inputs for genre, mood, and energy, plus a simple acoustic preference. It is designed for classroom exploration and explainability, not for production deployment.
 
-Describe what your recommender is designed to do and who it is for. 
+## 3. How the Model Works
 
-Prompts:  
+Each song is scored against a user profile using four components:
+- Genre alignment
+- Mood alignment
+- Energy distance from the user target
+- Acousticness match with the user preference
 
-- What kind of recommendations does it generate  
-- What assumptions does it make about the user  
-- Is this for real users or classroom exploration  
+The model adds weighted points for each component, then ranks songs by total score. It also returns a short explanation listing which components matched.
 
----
+## 4. Data
 
-## 3. How the Model Works  
+The dataset contains 10 songs in a CSV file with fields including title, artist, genre, mood, energy, tempo, valence, danceability, and acousticness.
 
-Explain your scoring approach in simple language.  
+Represented styles include pop, lofi, rock, ambient, jazz, synthwave, and indie pop with moods such as happy, chill, focused, intense, relaxed, and moody.
 
-Prompts:  
+The dataset is tiny and synthetic, so many real listening patterns are missing.
 
-- What features of each song are used (genre, energy, mood, etc.)  
-- What user preferences are considered  
-- How does the model turn those into a score  
-- What changes did you make from the starter logic  
+## 5. Strengths
 
-Avoid code here. Pretend you are explaining the idea to a friend who does not program.
+- Transparent and easy-to-debug ranking behavior
+- Explanations are human-readable and tied to explicit features
+- Performs reasonably for users with clearly defined preferences
 
----
+## 6. Limitations and Bias
 
-## 4. Data  
+- Very small catalog leads to limited recommendation diversity
+- No collaborative signal from other users
+- No history-aware personalization across sessions
+- Weight choices can over-favor direct genre matches and reduce discovery
+- Data composition may over-represent certain vibe clusters
 
-Describe the dataset the model uses.  
+## 7. Evaluation
 
-Prompts:  
+Evaluation was done through:
+- Manual profile testing with multiple preference combinations
+- Checking if top results matched expected vibe and energy
+- Running unit tests for recommendation ordering and explanation output
 
-- How many songs are in the catalog  
-- What genres or moods are represented  
-- Did you add or remove data  
-- Are there parts of musical taste missing in the dataset  
+Compared with Spotify or YouTube Music, this model is far simpler. Those systems combine collaborative filtering, content-based features, and rich behavior/context logs. This MVP captures only content-style matching from a single profile snapshot.
 
----
+## 8. Future Work
 
-## 5. Strengths  
+- Add collaborative signals from multiple users
+- Add diversity constraints so top results are less repetitive
+- Include sequence/session context and skip behavior
+- Calibrate and learn weights instead of hand-tuning
+- Expose adjustable controls in a small UI
 
-Where does your system seem to work well  
+## 9. Personal Reflection
 
-Prompts:  
+This project showed that even a small, interpretable scoring system can generate plausible recommendations quickly. The biggest insight was how strongly recommendations depend on feature design and weighting decisions.
 
-- User types for which it gives reasonable results  
-- Any patterns you think your scoring captures correctly  
-- Cases where the recommendations matched your intuition  
-
----
-
-## 6. Limitations and Bias 
-
-Where the system struggles or behaves unfairly. 
-
-Prompts:  
-
-- Features it does not consider  
-- Genres or moods that are underrepresented  
-- Cases where the system overfits to one preference  
-- Ways the scoring might unintentionally favor some users  
-
----
-
-## 7. Evaluation  
-
-How you checked whether the recommender behaved as expected. 
-
-Prompts:  
-
-- Which user profiles you tested  
-- What you looked for in the recommendations  
-- What surprised you  
-- Any simple tests or comparisons you ran  
-
-No need for numeric metrics unless you created some.
-
----
-
-## 8. Future Work  
-
-Ideas for how you would improve the model next.  
-
-Prompts:  
-
-- Additional features or preferences  
-- Better ways to explain recommendations  
-- Improving diversity among the top results  
-- Handling more complex user tastes  
-
----
-
-## 9. Personal Reflection  
-
-A few sentences about your experience.  
-
-Prompts:  
-
-- What you learned about recommender systems  
-- Something unexpected or interesting you discovered  
-- How this changed the way you think about music recommendation apps  
+It also made clear why real-world systems like Spotify and YouTube Music need hybrid recommenders: collaborative filtering improves discovery, while content-based signals preserve consistency with user taste.
