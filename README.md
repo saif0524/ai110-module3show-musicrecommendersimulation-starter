@@ -2,34 +2,61 @@
 
 ## Project Summary
 
-In this project you will build and explain a small music recommender system.
-
-Your goal is to:
-
-- Represent songs and a user "taste profile" as data
-- Design a scoring rule that turns that data into recommendations
-- Evaluate what your system gets right and wrong
-- Reflect on how this mirrors real world AI recommenders
-
-Replace this paragraph with your own summary of what your version does.
-
----
+This MVP builds a rule-based music recommender that scores songs by genre match, mood match, energy closeness, and acoustic preference. It loads a small CSV catalog, computes a score for each song, sorts by score, and returns top recommendations with plain-language explanations.
 
 ## How The System Works
 
-Explain your design in plain language.
+The recommender uses song-level features and user preferences, then computes a weighted score.
 
-Some prompts to answer:
+### Data Flow Plan (Input -> Process -> Output)
 
-- What features does each Song use in your system
-  - For example: genre, mood, energy, tempo
-- What information does your UserProfile store
-- How does your Recommender compute a score for each song
-- How do you choose which songs to recommend
+Input (User Preferences):
+- Favorite genre
+- Favorite mood
+- Target energy
+- Acoustic preference
 
-You can include a simple diagram or bullet list if helpful.
+Process (Scoring Loop):
+- Load `data/songs.csv`
+- For each song, compute a score using:
+	- Genre match: +2.0
+	- Mood match: +1.0
+	- Energy similarity points (higher when song energy is closer to target)
+	- Acoustic preference alignment bonus
+- Save each song with score and explanation
 
----
+Output (Ranking):
+- Sort songs by score descending
+- Break ties with song id for stable ordering
+- Return Top-K recommendations with short reasons
+
+In real-world apps, recommendation systems usually blend collaborative filtering (patterns across similar users), content-based filtering (similarity across song attributes), and session context (what the user is doing right now). My version prioritizes transparent content-based matching first, especially genre, mood, and energy alignment, so each recommendation is easy to explain and debug while still producing a useful top-k list.
+
+Song features used:
+- Genre
+- Mood
+- Energy
+- Acousticness
+- Supporting metadata (title, artist, tempo, valence, danceability)
+
+User profile inputs used:
+- Favorite genre
+- Favorite mood
+- Target energy
+- Whether the user prefers acoustic-heavy tracks
+
+Scoring logic:
+- Genre exact or close match: +2.0
+- Mood match: +1.0
+- Energy similarity: up to +1.5, based on absolute distance
+- Acoustic preference alignment: +1.0
+
+Top-k selection:
+- Score each song
+- Sort by descending score
+- Return top k with short explanations
+
+
 
 ## Getting Started
 
@@ -79,17 +106,10 @@ Use this section to document the experiments you ran. For example:
 
 ## Limitations and Risks
 
-Summarize some limitations of your recommender.
-
-Examples:
-
-- It only works on a tiny catalog
-- It does not understand lyrics or language
-- It might over favor one genre or mood
-
-You will go deeper on this in your model card.
-
----
+- Tiny catalog of 10 songs limits coverage and diversity.
+- No real listening-history feedback loop.
+- No handling of novelty, fairness, or diversity constraints.
+- Can over-favor direct feature matches and miss exploratory recommendations.
 
 ## Reflection
 

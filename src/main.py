@@ -20,7 +20,16 @@ def main() -> None:
     # Starter example profile
     user_prefs = {"genre": "pop", "mood": "happy", "energy": 0.8}
 
-    recommendations = recommend_songs(user_prefs, songs, k=5)
+
+    taste_profile = {
+            "favorite_genre": "rock",
+            "favorite_mood": "intense",
+            "target_energy": 0.88,
+            "likes_acoustic": false,
+            "target_valence": 0.45,
+            "target_tempo_bpm": 145
+}
+    recommendations = recommend_songs(taste_profile, songs, k=5)
 
     print("\nTop recommendations:\n")
     for rec in recommendations:

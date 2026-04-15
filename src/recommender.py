@@ -3,6 +3,11 @@ from typing import Any, List, Dict, Tuple
 from dataclasses import dataclass
 
 
+GENRE_MATCH_POINTS = 2.0
+MOOD_MATCH_POINTS = 1.0
+MAX_ENERGY_SIMILARITY_POINTS = 1.5
+
+
 def _normalize_text(value: Any) -> str:
     return str(value).strip().lower()
 
@@ -22,16 +27,16 @@ def _score_song_values(
 
     if user_genre and song_genre:
         if _normalize_text(user_genre) == _normalize_text(song_genre) or _normalize_text(user_genre) in _normalize_text(song_genre) or _normalize_text(song_genre) in _normalize_text(user_genre):
-            score += 2.5
+            score += GENRE_MATCH_POINTS
             reasons.append(f"genre matches {song_genre}")
 
     if user_mood and song_mood:
         if _normalize_text(user_mood) == _normalize_text(song_mood):
-            score += 2.0
+            score += MOOD_MATCH_POINTS
             reasons.append(f"mood matches {song_mood}")
 
     energy_gap = abs(float(target_energy) - float(energy))
-    energy_score = max(0.0, 1.5 - (energy_gap * 1.5))
+    energy_score = max(0.0, MAX_ENERGY_SIMILARITY_POINTS - (energy_gap * MAX_ENERGY_SIMILARITY_POINTS))
     score += energy_score
     if energy_gap <= 0.15:
         reasons.append("energy is close to the target")
